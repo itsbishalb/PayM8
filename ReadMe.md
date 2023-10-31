@@ -30,13 +30,14 @@ To run this project, you will need to add the following environment variables to
 
 `ANOTHER_API_KEY` -->
 
+# Conventions
 
-# Coding Conventions
-
-
-### [Frontend Coding Conventions](/Documentation/front-end-coding-conventions.md)
+### [Commit Conventions](/documentation/commit-conventions.md)
 
 
-## Backend Coding Conventions
+### [Frontend Coding Conventions](/documentation/front-end-coding-conventions.md)
+
+
+### [Backend Coding Conventions](/documentation/back-end-coding-conventions.md)
 
 
