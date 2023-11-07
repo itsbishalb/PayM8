@@ -5,28 +5,21 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '8000:8000'
+      - 127.0.0.1:${PORT}:${PORT}
     volumes:
       - './src:/app/src'
     environment:
       NODE_ENV: development
-
   mongo:
-    image: mongo:6
-    container_name: mongo
+    image: mongo:7
+    restart: always
     command: mongod --quiet --logpath /dev/null 
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DBNAME}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGOUSER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGOPASSWORD}
     ports:
-      - "27017:27017"
+      - 127.0.0.1:27017:27017
     volumes:
-      - MONGO_DATA:/data/db
-      - MONGO_CONFIG:/data/configdb
-    restart: always
+      - ./data/db:/data/db
 
-volumes:
-  MONGO_DATA:
-    name: MONGO_DATA
-  MONGO_CONFIG:
-    name: MONGO_CONFIG
