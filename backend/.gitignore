@@ -137,3 +137,5 @@ docker-compose.override.yml
 
 backend/data/*
 backend/data/.*
+backend/data/
+backend/data
