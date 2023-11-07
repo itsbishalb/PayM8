@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'  # Host:Container ports - Host = Your machine, 
+                      # Container = Docker container
+    volumes:
+      - './src:/app/src'  
+    environment:
+      - NODE_ENV=development  
