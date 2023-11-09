@@ -1,20 +1,13 @@
 const mongoose = require("mongoose");
-
-
 const connectDB = async () => {
-    console.log("Connecting to MongoDB");
 
     try {
         const MONGO_URL = process.env.MONGOURL;
         const MONGO_USERNAME = process.env.MONGOUSER;
         const MONGO_PASSWORD = process.env.MONGOPASSWORD;
         const MONGO_DB = process.env.DBNAME;
-
         const MONGO_URI = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_URL}/${MONGO_DB}?authSource=admin`;
-        console.log(`MONGO_URI: ${MONGO_URI}`);
-
         const conn = await mongoose.connect(MONGO_URI);
-
         console.log(`MongoDB connected: ${conn.connection.host}`);
     } catch (error) {
         console.log("Error connecting to MongoDB");
