@@ -1,0 +1,25 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 127.0.0.1:${PORT}:${PORT}
+    volumes:
+      - './src:/app/src'
+    environment:
+      NODE_ENV: development
+  mongo:
+    image: mongo:7
+    restart: always
+    command: mongod --quiet --logpath /dev/null 
+    environment:
+      MONGO_INITDB_DATABASE: ${DBNAME}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGOUSER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGOPASSWORD}
+    ports:
+      - 127.0.0.1:27017:27017
+    volumes:
+      - ./data/db:/data/db
+
