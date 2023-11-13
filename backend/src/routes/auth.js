@@ -8,7 +8,7 @@ const authRouter = express.Router();
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-
+    console.log(req.body);
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -29,7 +29,7 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
     const { firstName, lastName, email, password, dob, phone, address } = req.body;
-
+    console.log(req.body);
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({
@@ -43,7 +43,9 @@ const signup = async (req, res) => {
         });
         await user.save();
         res.status(201).json({ message: 'User created' });
+        console.log("User created " + user.email);
     } catch (error) {
+        console.log("User Creation Failed " + error.message);
         res.status(500).json({ message: 'Error creating user', error: error.message });
     }
 };
