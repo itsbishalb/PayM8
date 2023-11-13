@@ -134,8 +134,9 @@ dist
 #docker data
 
 docker-compose.override.yml
-
-backend/data/*
-backend/data/.*
-backend/data/
-backend/data
+data/*
+data/.*
+data/
+data
+data
+data/
