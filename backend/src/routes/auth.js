@@ -1,8 +1,9 @@
-// auth.js
-const bcrypt = require('bcrypt');
+
+const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const User = require('../model/user');
+
 const authRouter = express.Router();
 
 const login = async (req, res) => {
@@ -27,19 +28,34 @@ const login = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-    const { email, password, name } = req.body;
+    const { firstName, lastName, email, password, dob, phone, address } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ email, password: hashedPassword, name });
+        const user = new User({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            dob,
+            phone,
+            address
+        });
         await user.save();
         res.status(201).json({ message: 'User created' });
     } catch (error) {
-        res.status(500).json({ message: 'Error creating user' });
+        res.status(500).json({ message: 'Error creating user', error: error.message });
     }
 };
 
 authRouter.post('/login', login);
 authRouter.post('/signup', signup);
+authRouter.get('/login', (req, res) => {
+    res.send("Login page");
+})
 
-module.exports = authRouter;
+authRouter.get('/signup', (req, res) => {
+    res.send("Signup page");
+})
+
+module.exports = {authRouter};

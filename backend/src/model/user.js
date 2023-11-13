@@ -26,19 +26,12 @@ const userSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    phone:{
-        countryCode: {
-            type: number,
-            required: true,
-            trim: true
-        },
-        number: {
-            type: number,
-            required: true,
-            trim: true
-        }
-    }, 
-    
+    phone: {
+        type: String,
+        required: true,
+        trim: true
+    },
+
     address: {
         street: {
             type: String,
