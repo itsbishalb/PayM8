@@ -1,6 +1,6 @@
 const Transaction = require('../model/transaction.js');
 const express = require('express');
-const User = require('../model/user');
+const User = require('../model/user')
 
 const transactionRouter = express.Router();
 transactionRouter.post('/', async (req, res) => {
