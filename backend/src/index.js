@@ -3,11 +3,12 @@ const connectDB = require("./db/db");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8000;
+const cors = require("cors");
 const { authRouter } = require("./routes/auth");
 connectDB();
 
 app.use(express.json());
-
+app.use(cors());
 
 app.get("/", (request, response) => {
     response.send("Hi there");
