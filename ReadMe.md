@@ -40,4 +40,4 @@ To run this project, you will need to add the following environment variables to
 
 ### [Backend Coding Conventions](/documentation/back-end-coding-conventions.md)
 
-
+## [Git branching process](/documentation/git-process-management.md)
