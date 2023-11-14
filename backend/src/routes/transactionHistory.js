@@ -3,13 +3,19 @@ const express = require('express');
 const User = require('../model/user')
 
 const transactionRouter = express.Router();
+
 transactionRouter.post('/', async (req, res) => {
     console.log(req.body);
-    const { userId, amount, description, date } = req.body;
+    const { userEmail, amount, description, date } = req.body;
 
     try {
+        const user = await User.findOne({ email: userEmail });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
         const newTransaction = new Transaction({
-            userId,
+            userEmail: user.email,
             amount,
             description,
             date
@@ -22,3 +28,6 @@ transactionRouter.post('/', async (req, res) => {
         res.status(500).json({ message: 'Error creating transaction', error: error.message });
     }
 });
+
+transactionRouter.post('/transaction', Transaction);
+module.exports = transactionRouter;

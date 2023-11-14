@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8000;
 const { authRouter } = require("./routes/auth");
-const transaction = require('./model/transaction');
+const transactionRouter = require("./routes/transactionHistory");
 connectDB();
 
 app.use(express.json());
@@ -15,7 +15,7 @@ app.get("/", (request, response) => {
 });
 
 app.use("/api/", authRouter);
-app.use("/api/transaction", transaction);
+app.use("/api/transaction/", transactionRouter);
 
 app.listen(PORT, () => {
     console.log("Listen on the port 8000...");

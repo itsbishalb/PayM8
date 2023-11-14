@@ -13,6 +13,7 @@ const authRouter = express.Router();
 
 
 const login = async (req, res) => {
+    console.log(req.body);
     const { email, password } = req.body;
 
     try {
