@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import AuthForm from './Auth';
+import AuthForm from '../app/Auth';
 
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 
+import "../app/globals.css";
 
 export default function Login() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
