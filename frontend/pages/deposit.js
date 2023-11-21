@@ -13,4 +13,5 @@ const Deposit = () => {
   );
 };
 
+Deposit();
 export default Deposit;
