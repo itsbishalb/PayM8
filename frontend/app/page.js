@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import AuthForm from './Auth';
-import WithdrawForm from './withdraw'; // Import the WithdrawForm component
-import DepositForm from './deposit'; // Import the DepositForm component
+
 import Cookies from 'js-cookie';
+import Link from 'next/link';
+
 
 export default function Login() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -48,20 +49,23 @@ export default function Login() {
 
   return (
     <div>
-      {/* Top Menu */}
+      {isAuthenticated &&
       <nav className="bg-blue-500 p-4">
         <ul className="flex space-x-4">
           <li>
-            <a href="#" onClick={() => handleOptionClick("withdraw")}>Option 1</a>
+            <Link href="/withdraw">
+              <span className="cursor-pointer">Withdraw</span>
+            </Link>
           </li>
           <li>
-            <a href="#" onClick={() => handleOptionClick("deposit")}>Option 2</a>
+            <Link href="/deposit">
+              <span className="cursor-pointer">Deposit</span>
+            </Link>
           </li>
-          <li>
-            <a href="#">Option 3</a>
-          </li>
+          {/* ... other links ... */}
         </ul>
       </nav>
+      }
 
       <main className="flex min-h-screen items-center justify-center p-24">
         {/* Next.js logo section */}

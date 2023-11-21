@@ -1,58 +1,50 @@
 "use client";
+import axios from 'axios';
 import React, { useState } from 'react';
-import axios from 'axios'; // Ensure Axios is installed
-
-export default function DepositForm(props) {
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
+export default function WithdrawForm(props) {
     const email = props.userEmail;
     const [amount, setAmount] = useState('');
-    const [depositMethod, setDepositMethod] = useState('paypal');
+    const [withdrawMethod, setWithdrawMethod] = useState('paypal');
     const [paypalAccount, setPaypalAccount] = useState('');
     const [bankAccountHolder, setBankAccountHolder] = useState('');
     const [bankAccountNumber, setBankAccountNumber] = useState('');
     const [sortCode, setSortCode] = useState('');
-
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // Fake bank check (for demonstration purposes)
-        if (depositMethod === 'bank' && !fakeBankCheck(bankAccountNumber, sortCode)) {
-            alert('Invalid bank details');
-            return;
-        }
-
-        const depositDetails = {
-            email: email, // Default email
+    
+        const withdrawalDetails = {
+            userEmail: email, // Replace with the actual user email
             amount,
-            method: depositMethod,
-            paypalAccount: depositMethod === 'paypal' ? paypalAccount : null,
-            bankDetails: depositMethod === 'bank' ? { bankAccountHolder, bankAccountNumber, sortCode } : null,
+            method: withdrawMethod,
+            paypalAccount: withdrawMethod === 'paypal' ? paypalAccount : undefined,
+            bankDetails: withdrawMethod === 'bank' ? { bankAccountHolder, bankAccountNumber, sortCode } : undefined,
         };
-
+    
+        console.log('Withdrawing:', withdrawalDetails);
+    
         try {
-            const response = await axios.post('http://localhost:8000/api/deposit', depositDetails);
-            console.log('Deposit successful:', response.data);
+            const url = apiUrl+'/api/withdraw';
+            const response = await axios.post('http://localhost:8000/api/withdraw', withdrawalDetails);
+            console.log('Withdrawal successful:', response.data);
             // Reset the form
             setAmount('');
+            setWithdrawMethod(''); // Assuming you have a state for this
             setPaypalAccount('');
             setBankAccountHolder('');
             setBankAccountNumber('');
             setSortCode('');
         } catch (error) {
-            console.error('Error during deposit:', error);
-            alert('Deposit failed');
+            console.error('Error during withdrawal:', error);
+            alert('Withdrawal failed' + error.message);
         }
-    };
-
-    const fakeBankCheck = (accountNumber, sortCode) => {
-        return accountNumber.length === 8 && sortCode.length === 6;
     };
 
     return (
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto my-8">
-            {/* Amount input */}
             <div className="mb-6">
                 <label htmlFor="amount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Deposit Amount
+                    Withdraw Amount
                 </label>
                 <input
                     type="number"
@@ -66,17 +58,16 @@ export default function DepositForm(props) {
                 />
             </div>
 
-            {/* Deposit method selection */}
             <div className="mb-6">
-                <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Deposit to:</span>
+                <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Withdraw to:</span>
                 <div className="flex items-center mb-4">
                     <input
                         id="paypal"
                         type="radio"
-                        name="depositMethod"
+                        name="withdrawMethod"
                         value="paypal"
-                        checked={depositMethod === 'paypal'}
-                        onChange={() => setDepositMethod('paypal')}
+                        checked={withdrawMethod === 'paypal'}
+                        onChange={() => setWithdrawMethod('paypal')}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600"
                     />
                     <label htmlFor="paypal" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -87,10 +78,10 @@ export default function DepositForm(props) {
                     <input
                         id="bank"
                         type="radio"
-                        name="depositMethod"
+                        name="withdrawMethod"
                         value="bank"
-                        checked={depositMethod === 'bank'}
-                        onChange={() => setDepositMethod('bank')}
+                        checked={withdrawMethod === 'bank'}
+                        onChange={() => setWithdrawMethod('bank')}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600"
                     />
                     <label htmlFor="bank" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -99,8 +90,7 @@ export default function DepositForm(props) {
                 </div>
             </div>
 
-            {/* PayPal account input */}
-            {depositMethod === 'paypal' && (
+            {withdrawMethod === 'paypal' && (
                 <div className="mb-6">
                     <label htmlFor="paypalAccount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                         PayPal Account
@@ -113,13 +103,12 @@ export default function DepositForm(props) {
                         onChange={(e) => setPaypalAccount(e.target.value)}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder="email@example.com"
-                        required={depositMethod === 'paypal'}
+                        required={withdrawMethod === 'paypal'}
                     />
                 </div>
             )}
 
-            {/* Bank account inputs */}
-            {depositMethod === 'bank' && (
+            {withdrawMethod === 'bank' && (
                 <div>
                     <div className="mb-6">
                         <label htmlFor="bankAccountHolder" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -132,7 +121,7 @@ export default function DepositForm(props) {
                             value={bankAccountHolder}
                             onChange={(e) => setBankAccountHolder(e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required={depositMethod === 'bank'}
+                            required={withdrawMethod === 'bank'}
                         />
                     </div>
                     <div className="mb-6">
@@ -146,7 +135,7 @@ export default function DepositForm(props) {
                             value={bankAccountNumber}
                             onChange={(e) => setBankAccountNumber(e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required={depositMethod === 'bank'}
+                            required={withdrawMethod === 'bank'}
                         />
                     </div>
                     <div className="mb-6">
@@ -160,19 +149,19 @@ export default function DepositForm(props) {
                             value={sortCode}
                             onChange={(e) => setSortCode(e.target.value)}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required={depositMethod === 'bank'}
+                            required={withdrawMethod === 'bank'}
                         />
                     </div>
                 </div>
             )}
 
-            {/* Submit button */}
             <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
             >
-                Deposit
+                Withdraw
             </button>
         </form>
     );
 }
+

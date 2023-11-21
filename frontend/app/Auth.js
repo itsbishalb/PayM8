@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import axios from 'axios';
-
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
 const AuthForm = (props) => {
     const onAuthenticate = props.onAuthenticate;
     const [isLogin, setIsLogin] = useState(true);
@@ -29,7 +29,7 @@ const AuthForm = (props) => {
             let response;
             if (isLogin) {
                 // Login request
-                response = await axios.post('http://localhost:8000/api/login', {
+                response = await axios.post(apiUrl + '/api/login', {
                     email: formData.email,
                     password: formData.password
                 });
@@ -38,7 +38,7 @@ const AuthForm = (props) => {
    
             } else {
                 // Signup request
-                response = await axios.post('http://localhost:8000/api/signup', {
+                response = await axios.post(apiUrl + '/api/signup', {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     email: formData.email,
