@@ -1,8 +1,9 @@
-"use client";// components/AuthForm.js
-// components/AuthForm.js
+"use client";
 import React, { useState } from 'react';
-
-const AuthForm = () => {
+import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
+const AuthForm = (props) => {
+    const onAuthenticate = props.onAuthenticate;
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -24,45 +25,61 @@ const AuthForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (isLogin) {
-            // post to localhost:8000/api/login with formData.email and formData.password in JSON format in ReportBody
-
-            const response = await fetch('http://localhost:8000/api/login', {   
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+        try {
+            let response;
+            if (isLogin) {
+                // Login request
+                response = await axios.post(apiUrl + '/api/login', {
                     email: formData.email,
                     password: formData.password
-                })
-            });
-        } else {
+                });
 
-            const response = await fetch('http://localhost:8000/api/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+             
+   
+            } else {
+                // Signup request
+                response = await axios.post(apiUrl + '/api/signup', {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     email: formData.email,
                     password: formData.password,
                     dob: formData.dob,
                     phone: formData.phone,
-                    street: formData.street,
-                    city: formData.city,
-                    state: formData.state,
-                    zip: formData.zip,
-                    country: formData.country
-                })
-            });
-        }
+                    address: {
+                        street: formData.street,
+                        city: formData.city,
+                        state: formData.state,
+                        zip: formData.zip,
+                        country: formData.country
+                    }
+                });
+            }
 
-        response.json().then((data) => {
-            console.log(data);
-        });
+            // Handle response here
+            // For example, you might want to store the received token or user data
+            console.log(response.data);
+            onAuthenticate(true, formData.email);
+
+            // You might also want to redirect the user or update the UI in some way
+
+        } catch (error) {
+            // Handle errors here
+            // For example, you might want to show an error message to the user
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error('Error data:', error.response.data);
+                console.error('Error status:', error.response.status);
+                console.error('Error headers:', error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('Error request:', error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error message:', error.message);
+            }
+            console.error('Error config:', error.config);
+        }
     };
 
     const toggleForm = () => {
@@ -76,73 +93,73 @@ const AuthForm = () => {
                 <form onSubmit={handleSubmit} className="mt-4">
                     {!isLogin && (
                         <>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="firstName">First Name</label>
-                                <input type="text" placeholder="First Name" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="firstName" name="firstName" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900">First Name</label>
+                                <input type="text" id="firstName" name="firstName" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="lastName">Last Name</label>
-                                <input type="text" placeholder="Last Name" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="lastName" name="lastName" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-900">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="dob">Date of Birth</label>
-                                <input type="date" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="dob" name="dob" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="dob" className="block mb-2 text-sm font-medium text-gray-900">Date of Birth</label>
+                                <input type="date" id="dob" name="dob" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="phone">Phone</label>
-                                <input type="tel" placeholder="Phone Number" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="phone" name="phone" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="street">Street</label>
-                                <input type="text" placeholder="Street" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="street" name="street" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="street" className="block mb-2 text-sm font-medium text-gray-900">Street</label>
+                                <input type="text" id="street" name="street" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="city">City</label>
-                                <input type="text" placeholder="City" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="city" name="city" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="city" className="block mb-2 text-sm font-medium text-gray-900">City</label>
+                                <input type="text" id="city" name="city" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="state">State</label>
-                                <input type="text" placeholder="State" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="state" name="state" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="state" className="block mb-2 text-sm font-medium text-gray-900">State</label>
+                                <input type="text" id="state" name="state" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="zip">Zip Code</label>
-                                <input type="text" placeholder="Zip Code" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="zip" name="zip" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="zip" className="block mb-2 text-sm font-medium text-gray-900">Zip Code</label>
+                                <input type="text" id="zip" name="zip" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
-                            <div className="mt-4">
-                                <label className="block" htmlFor="country">Country</label>
-                                <input type="text" placeholder="Country" 
-                                       className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                                       id="country" name="country" onChange={handleChange} />
+                            <div className="mb-6">
+                                <label htmlFor="country" className="block mb-2 text-sm font-medium text-gray-900">Country</label>
+                                <input type="text" id="country" name="country" onChange={handleChange}
+                                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                                    required />
                             </div>
                         </>
                     )}
-                    <div className="mt-4">
-                        <label className="block" htmlFor="email">Email</label>
-                        <input type="email" placeholder="Email" 
-                               className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                               id="email" name="email" onChange={handleChange} />
+                    <div className="mb-6">
+                        <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                        <input type="email" id="email" name="email" onChange={handleChange}
+                            className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                            required />
                     </div>
-                    <div className="mt-4">
-                        <label className="block" htmlFor="password">Password</label>
-                        <input type="password" placeholder="Password" 
-                               className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                               id="password" name="password" onChange={handleChange} />
+                    <div className="mb-6">
+                        <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
+                        <input type="password" id="password" name="password" onChange={handleChange}
+                            className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
+                            required />
                     </div>
                     <div className="flex items-center justify-between mt-4">
                         <button type="submit" className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-blue-700 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
