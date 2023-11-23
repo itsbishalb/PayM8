@@ -1,6 +1,8 @@
 import React from 'react';
 import DepositForm from '../app/DepositComponent'; // Adjust the path as needed
 import Cookies from 'js-cookie';
+import "../app/globals.css"
+
 
 const Deposit = () => {
   const userEmail = Cookies.get('userEmail') || '';
