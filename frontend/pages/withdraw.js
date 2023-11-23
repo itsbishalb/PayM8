@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import React from 'react';
 import WithdrawForm from "../app/WithdrawComponent"
 import Cookies from 'js-cookie';
