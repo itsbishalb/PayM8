@@ -1,0 +1,95 @@
+{
+    "transactions": [
+      {
+        "id": 1,
+        "type": "sent",
+        "receiver": "John Doe",
+        "name": "Transaction 1",
+        "amount": 100,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 2,
+        "type": "sent",
+        "receiver": "Alice Smith",
+        "name": "Transaction 2",
+        "amount": 150,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 3,
+        "type": "received",
+        "sender": "Bob Johnson",
+        "name": "Transaction 3",
+        "amount": 200,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 4,
+        "type": "received",
+        "sender": "Eve Williams",
+        "name": "Transaction 4",
+        "amount": 75,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 5,
+        "type": "sent",
+        "receiver": "Charlie Brown",
+        "name": "Transaction 5",
+        "amount": 120,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 6,
+        "type": "received",
+        "sender": "Grace Davis",
+        "name": "Transaction 6",
+        "amount": 180,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 7,
+        "type": "sent",
+        "receiver": "David Miller",
+        "name": "Transaction 7",
+        "amount": 90,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 8,
+        "type": "sent",
+        "receiver": "Frank White",
+        "name": "Transaction 8",
+        "amount": 130,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 9,
+        "type": "received",
+        "sender": "Helen Anderson",
+        "name": "Transaction 9",
+        "amount": 160,
+        "date": "2023-11-14",
+        "status": "success"
+      },
+      {
+        "id": 10,
+        "type": "received",
+        "sender": "Ivan Martin",
+        "name": "Transaction 10",
+        "amount": 110,
+        "date": "2023-11-14",
+        "status": "success"
+      }
+    ]
+  }
+  

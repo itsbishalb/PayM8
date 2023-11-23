@@ -7,6 +7,9 @@ const cors = require("cors");
 const { authRouter } = require("./routes/auth");
 const depositRouter  = require("./routes/deposit");
 const withdrawRouter  = require("./routes/withdraw");
+
+const transactionRouter = require("./routes/transactionHistory");
+
 connectDB();
 
 app.use(express.json());
@@ -17,6 +20,7 @@ app.get("/", (request, response) => {
 });
 
 app.use("/api/", authRouter);
+app.use("/api/transaction/", transactionRouter);
 
 
 app.use("/api/deposit", depositRouter);
