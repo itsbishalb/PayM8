@@ -30,7 +30,7 @@ const Transactions = () => {
     const formatAmount = (type, amount) => {
         const sign = type === 'Withdrawal'  ? '-' : '+';
         const color = type === 'Withdrawal' ?'text-red-600' :  'text-green-600' ;
-        return <span className={`${color} font-semibold`}>{`${sign} £${amount.toFixed(2)}`}</span>;
+        return <span className={`${color} font-semibold`}>{`${sign} £${Math.round(amount*100)/100}`}</span>;
     };
 
     return (
@@ -47,7 +47,7 @@ const Transactions = () => {
                     <div key={index} className="bg-white rounded-lg shadow p-4">
                         <p className="text-sm text-gray-600">Type: <span className="font-semibold">{transaction.type}</span></p>
                         <p className="text-sm text-gray-600">Amount: {formatAmount(transaction.type, transaction.amount)}</p>
-                        <p className="text-sm text-gray-600">Date: <span className="font-semibold">{new Date(transaction.date).toLocaleDateString()}</span></p>
+                        <p className="text-sm text-gray-600">Date: <span className="font-semibold">{new Date(transaction.date).toLocaleString()}</span></p>
                     </div>
                 ))}
             </div>

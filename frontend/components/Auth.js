@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL
 const AuthForm = (props) => {
-    const onAuthenticate = props.onAuthenticate;
+    const { onAuthenticate } = props;
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -18,6 +18,7 @@ const AuthForm = (props) => {
         zip: '',
         country: ''
     });
+    const [error, setError] = useState(null); // State to store error message
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,9 +34,6 @@ const AuthForm = (props) => {
                     email: formData.email,
                     password: formData.password
                 });
-
-             
-   
             } else {
                 // Signup request
                 response = await axios.post(apiUrl + '/api/signup', {
@@ -59,6 +57,7 @@ const AuthForm = (props) => {
             // For example, you might want to store the received token or user data
             console.log(response.data);
             onAuthenticate(true, formData.email);
+            setError(null); // Clear any previous errors
 
             // You might also want to redirect the user or update the UI in some way
 
@@ -71,6 +70,7 @@ const AuthForm = (props) => {
                 console.error('Error data:', error.response.data);
                 console.error('Error status:', error.response.status);
                 console.error('Error headers:', error.response.headers);
+                setError(error.response.data.message); // Set the error message from the response
             } else if (error.request) {
                 // The request was made but no response was received
                 console.error('Error request:', error.request);
@@ -84,12 +84,14 @@ const AuthForm = (props) => {
 
     const toggleForm = () => {
         setIsLogin(!isLogin);
+        setError(null); // Clear any previous errors when toggling the form
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="px-8 py-6 mt-4 text-left bg-white shadow-lg">
                 <h3 className="text-2xl font-bold text-center">{isLogin ? 'Login' : 'Signup'}</h3>
+                {error && <p className="text-red-600 text-center">{error}</p>}
                 <form onSubmit={handleSubmit} className="mt-4">
                     {!isLogin && (
                         <>
