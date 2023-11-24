@@ -46,6 +46,10 @@ const depositSchema = new mongoose.Schema({
             type: String,
             required: function() { return this.method === 'bank'; }
         }
+    },
+    date: {
+        type: Date,
+        default: Date.now
     }
 });
 

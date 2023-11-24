@@ -1,33 +1,41 @@
-const Transaction = require('../model/transaction.js');
 const express = require('express');
-const User = require('../model/user')
+const router = express.Router();
+const SendMoney = require('../model/sendModel');
+const Withdrawal = require('../model/withdrawModel');
+const Deposit = require('../model/depositModel');
 
-const transactionRouter = express.Router();
-
-transactionRouter.post('/', async (req, res) => {
-    console.log(req.body);
-    const { userEmail, amount, description, date } = req.body;
-
+router.get('/:email', async (req, res) => {
     try {
-        const user = await User.findOne({ email: userEmail });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+        const userEmail = req.params.email;
 
-        const newTransaction = new Transaction({
-            userEmail: user.email,
-            amount,
-            description,
-            date
-        });
+        // Fetch transactions for the given user
+        const sendMoneyTransactions = await SendMoney.find({ userEmail: userEmail }, 'amount date receiverEmail');
+        const withdrawalTransactions = await Withdrawal.find({ userEmail: userEmail }, 'amount date');
+        const depositTransactions = await Deposit.find({ userEmail: userEmail }, 'amount date');
 
-        const savedTransaction = await newTransaction.save();
+        // Process transactions to include only required fields
+        const processedTransactions = [
+            ...sendMoneyTransactions.map(tx => ({
+                amount: tx.amount,
+                date: tx.date,
+                type: `Send to ${tx.receiverEmail}`
+            })),
+            ...withdrawalTransactions.map(tx => ({
+                amount: tx.amount,
+                date: tx.date,
+                type: 'Withdrawal'
+            })),
+            ...depositTransactions.map(tx => ({
+                amount: tx.amount,
+                date: tx.date,
+                type: 'Deposit'
+            }))
+        ];
 
-        res.status(201).json({ message: 'Transaction created', transaction: savedTransaction });
+        res.json(processedTransactions);
     } catch (error) {
-        res.status(500).json({ message: 'Error creating transaction', error: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
-transactionRouter.post('/transaction', Transaction);
-module.exports = transactionRouter;
+module.exports = router;
