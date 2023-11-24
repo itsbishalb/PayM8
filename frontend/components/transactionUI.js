@@ -28,8 +28,9 @@ const Transactions = () => {
     }, []);
 
     const formatAmount = (type, amount) => {
-        const sign = type === 'Withdrawal'  ? '-' : '+';
-        const color = type === 'Withdrawal' ?'text-red-600' :  'text-green-600' ;
+        const sign = (type === 'Withdrawal' || type === 'send') ? '-' : '+';
+        const color = (type === 'Withdrawal' || type === 'send') ? 'text-red-600' : 'text-green-600';
+        
         return <span className={`${color} font-semibold`}>{`${sign} £${Math.round(amount*100)/100}`}</span>;
     };
 
