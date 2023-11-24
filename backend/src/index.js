@@ -7,7 +7,8 @@ const cors = require("cors");
 const { authRouter } = require("./routes/auth");
 const depositRouter  = require("./routes/deposit");
 const withdrawRouter  = require("./routes/withdraw");
-const sendMoney = require('./routes/sendMoney')
+const moneyTransactions = require('./routes/moneytransactions')
+const user = require('./routes/user');
 
 
 const transactionRouter = require("./routes/transactionHistory");
@@ -27,8 +28,8 @@ app.use("/api/transactions", transactionRouter);
 
 app.use("/api/deposit", depositRouter);
 app.use("/api/withdraw", withdrawRouter);
-app.use('/api/send', sendMoney);
-
+app.use('/api/send', moneyTransactions);
+app.use('/api/user', user);
 app.listen(PORT, () => {
     console.log("Listen on the port 8000...");
 });

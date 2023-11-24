@@ -7,7 +7,7 @@ const MainMenu = ({ children }) => {
         <div className="flex flex-col h-screen">
             {children}
             <nav className="fixed bottom-0 w-full bg-blue-500 p-2 flex justify-around border-t-2 border-gray-200">
-                <Link href="/transactions">
+                <Link href="/">
                     <div className="flex flex-col items-center">
                         <FaHome className="h-6 w-6 text-white" />
                         <span className="text-xs text-white">Home</span>
