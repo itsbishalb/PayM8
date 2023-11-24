@@ -22,7 +22,7 @@ app.get("/", (request, response) => {
 });
 
 app.use("/api/", authRouter);
-app.use("/api/transactions/", transactionRouter);
+app.use("/api/transactions", transactionRouter);
 
 
 app.use("/api/deposit", depositRouter);

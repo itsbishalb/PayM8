@@ -1,15 +1,18 @@
 
 import React from 'react';
-import SendMoneyForm from '@/app/SendComponent';
+import SendMoneyForm from '@/components/SendComponent';
 import "../app/globals.css"
+import MainMenu from '@/components/MainMenu';
+import withAuth from '@/components/WithAuth';
 
-const Withdraw = () => {
+const Send = () => {
   return (
-    <div>
-      <h1>Send Money</h1>
-      <SendMoneyForm />
-    </div>
+    <MainMenu>
+        <div className="flex flex-col h-screen justify-center items-center">
+        <SendMoneyForm />
+        </div>
+    </MainMenu>
   );
 };
 
-export default Withdraw;
+export default withAuth(Send);
