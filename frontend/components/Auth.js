@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL
+import logo from '../public/logo.svg';
 const AuthForm = (props) => {
     const { onAuthenticate } = props;
     const [isLogin, setIsLogin] = useState(true);
@@ -88,10 +89,10 @@ const AuthForm = (props) => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen bg-stone-900">
             <div className="px-8 py-6 mt-4 text-left bg-white shadow-lg">
-                <h3 className="text-2xl font-bold text-center">{isLogin ? 'Login' : 'Signup'}</h3>
-                {error && <p className="text-red-600 text-center">{error}</p>}
+                <img src={logo.src} />
+                <h3 className="text-2xl font-bold text-black text-center">{isLogin ? 'Login' : 'Signup'}</h3>
                 <form onSubmit={handleSubmit} className="mt-4">
                     {!isLogin && (
                         <>
@@ -163,11 +164,12 @@ const AuthForm = (props) => {
                             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 text-gray-900"
                             required />
                     </div>
+                    {error && <p className="text-red-600 text-center">{error}</p>}
                     <div className="flex items-center justify-between mt-4">
-                        <button type="submit" className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-blue-700 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+                        <button type="submit" className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-primary-50 rounded-md hover:bg-primary-100 focus:outline-none focus:bg-blue-600">
                             {isLogin ? 'Login' : 'Signup'}
                         </button>
-                        <button type="button" onClick={toggleForm} className="text-sm text-blue-600 hover:underline">
+                        <button type="button" onClick={toggleForm} className="text-sm text-primary-50 hover:underline">
                             {isLogin ? 'Create account' : 'Already have an account?'}
                         </button>
                     </div>

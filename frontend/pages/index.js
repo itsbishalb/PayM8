@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import MainMenu from '../components/MainMenu'; // Adjust the path as needed
 import Transactions from '../components/transactionUI'; // Adjust the path as needed
 import axios from 'axios'; // Import Axios for API requests
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
 import "../app/globals.css";
 
@@ -27,7 +28,7 @@ export default function Home() {
     try {
       const userEmail = Cookies.get('userEmail') || '';
   
-      const response = await axios.get(`http://localhost:8000/api/user/${userEmail}`);
+      const response = await axios.get(apiUrl + `/api/user/${userEmail}`);
       
       setUserInfo(response.data); // Set the user information from the response
     } catch (error) {
@@ -44,14 +45,14 @@ export default function Home() {
   return (
     <div>
       {userInfo && (
-        <div className="bg-blue-700 text-white p-4">
+        <div className="bg-teal-600 text-white p-4">
           <div className="container mx-auto flex justify-between items-center">
             <div>
               Welcome, {userInfo.firstName} {userInfo.lastName} | Balance: ${userInfo.balance}
             </div>
             <button
               onClick={handleLogout}
-              className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md"
+              className="text-white bg-primary-50 hover:bg-primary-100 px-3 py-1 rounded-md"
             >
               Logout
             </button>
