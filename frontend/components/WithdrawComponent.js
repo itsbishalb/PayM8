@@ -25,7 +25,7 @@ export default function WithdrawForm(props) {
     
         try {
             const url = apiUrl+'/api/withdraw';
-            const response = await axios.post('http://localhost:8000/api/withdraw', withdrawalDetails);
+            const response = await axios.post(url, withdrawalDetails);
             console.log('Withdrawal successful:', response.data);
             // Reset the form
             setAmount('');

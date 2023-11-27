@@ -1,6 +1,7 @@
 // pages/transactions.js
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
 const Transactions = () => {
     const [transactions, setTransactions] = useState([]);
@@ -14,7 +15,7 @@ const Transactions = () => {
             return;
         }
 
-        fetch(`http://localhost:8000/api/transactions/${userEmail}`)
+        fetch(apiUrl + `/api/transactions/${userEmail}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -35,7 +36,7 @@ const Transactions = () => {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Your Transactions</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center text-white">Transaction History</h1>
             {error && (
                 <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
                     <p className="font-bold">Error</p>
@@ -44,7 +45,7 @@ const Transactions = () => {
             )}
             <div className="flex flex-col gap-4">
                 {transactions.map((transaction, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow p-4">
+                    <div key={index} className="bg-stone-300 rounded-lg shadow p-4">
                         <p className="text-sm text-gray-600">Type: <span className="font-semibold">{transaction.type}</span></p>
                         <p className="text-sm text-gray-600">Amount: {formatAmount(transaction.type, transaction.amount)}</p>
                         <p className="text-sm text-gray-600">Date: <span className="font-semibold">{new Date(transaction.date).toLocaleString()}</span></p>
