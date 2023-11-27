@@ -1,17 +1,21 @@
-import Head from 'next/head';
+
 import React from 'react';
-import WithdrawForm from "../app/WithdrawComponent"
+import WithdrawForm from "../components/WithdrawComponent"
 import Cookies from 'js-cookie';
+import "../app/globals.css"
+import MainMenu from '@/components/MainMenu';
+import withAuth from '@/components/WithAuth';
 
 const Withdraw = () => {
   const userEmail = Cookies.get('userEmail') || '';
 
   return (
-    <div>
-      <h1>Withdraw Funds</h1>
+    <MainMenu>
+      <div className="flex flex-col h-screen justify-center items-center">
       <WithdrawForm userEmail={userEmail} />
-    </div>
+     </div>
+    </MainMenu>
   );
 };
 
-export default Withdraw;
+export default withAuth(Withdraw);

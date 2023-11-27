@@ -1,90 +1,66 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import AuthForm from '../app/Auth';
-
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+import MainMenu from '../components/MainMenu'; // Adjust the path as needed
+import Transactions from '../components/transactionUI'; // Adjust the path as needed
+import axios from 'axios'; // Import Axios for API requests
 
 import "../app/globals.css";
 
-export default function Login() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
-  const [selectedOption, setSelectedOption] = useState(null);
+export default function Home() {
+  const router = useRouter();
+  const [userInfo, setUserInfo] = useState(null); // State to store user info
 
   useEffect(() => {
-    // Check if the user is authenticated
-    const authCookie = Cookies.get('auth');
-    if (authCookie) {
-      setIsAuthenticated(true);
-      // Optionally, retrieve the user's email from the cookie or local storage
-      const email = Cookies.get('userEmail');
-      if (email) {
-        setUserEmail(email);
-      }
-      // Set a timeout to automatically log out after 10 minutes
-      setTimeout(() => {
-        Cookies.remove('auth');
-        setIsAuthenticated(false);
-      }, 600000); // 10 minutes in milliseconds
-    }
-  }, []);
-
-  const handleAuthentication = (status, email) => {
-    setIsAuthenticated(status);
-    if (status) {
-      setUserEmail(email);
-      Cookies.set('auth', 'true', { expires: 1 / 144 }); // Expires in 10 minutes
-      Cookies.set('userEmail', email, { expires: 1 / 144 }); // Store email in cookie
+    const isAuthenticated = Cookies.get('auth') === 'true';
+    if (!isAuthenticated) {
+      router.push('/login'); // Redirect to login if not authenticated
     } else {
-      Cookies.remove('auth');
-      Cookies.remove('userEmail');
-      setUserEmail('');
+      // Fetch user information when authenticated
+      fetchUserInfo();
+    }
+  }, [router]);
+  
+  // Function to fetch user information
+  const fetchUserInfo = async () => {
+    try {
+      const userEmail = Cookies.get('userEmail') || '';
+  
+      const response = await axios.get(`http://localhost:8000/api/user/${userEmail}`);
+      
+      setUserInfo(response.data); // Set the user information from the response
+    } catch (error) {
+      console.error('Error fetching user info:', error);
     }
   };
 
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
+  // Function to handle logout
+  const handleLogout = () => {
+    Cookies.remove('auth'); // Remove the authentication cookie
+    router.push('/login'); // Redirect to login page
   };
 
   return (
     <div>
-      {isAuthenticated &&
-      <nav className="bg-blue-500 p-4">
-        <ul className="flex space-x-4">
-          <li>
-            <Link href="/withdraw">
-              <span className="cursor-pointer">Withdraw</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/deposit">
-              <span className="cursor-pointer">Deposit</span>
-            </Link>
-          </li>
-          {/* ... other links ... */}
-        </ul>
-      </nav>
-      }
-
-      <main className="flex min-h-screen items-center justify-center p-24">
-        {/* Next.js logo section */}
-        <div className="relative flex place-items-center mb-8">
-          <Image
-            className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-            src="/paylogo.png"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
+      {userInfo && (
+        <div className="bg-blue-700 text-white p-4">
+          <div className="container mx-auto flex justify-between items-center">
+            <div>
+              Welcome, {userInfo.firstName} {userInfo.lastName} | Balance: ${userInfo.balance}
+            </div>
+            <button
+              onClick={handleLogout}
+              className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md"
+            >
+              Logout
+            </button>
+          </div>
         </div>
-
-        {!isAuthenticated && <AuthForm onAuthenticate={handleAuthentication} />}
-        {isAuthenticated && selectedOption === "withdraw" && <WithdrawForm userEmail={userEmail} />}
-        {isAuthenticated && selectedOption === "deposit" && <DepositForm userEmail={userEmail} />}
-      </main>
+      )}
+      <MainMenu>
+        <Transactions />
+      </MainMenu>
     </div>
   );
 }
