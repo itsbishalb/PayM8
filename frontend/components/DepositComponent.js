@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import axios from 'axios'; // Ensure Axios is installed
-const apiUrl = process.env.NEXT_PUBLIC_API_URL
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export default function DepositForm(props) {
     const email = props.userEmail;
     const [amount, setAmount] = useState('');
@@ -10,13 +11,16 @@ export default function DepositForm(props) {
     const [bankAccountHolder, setBankAccountHolder] = useState('');
     const [bankAccountNumber, setBankAccountNumber] = useState('');
     const [sortCode, setSortCode] = useState('');
+    const [error, setError] = useState(null); // State to store error message
+    const [successMessage, setSuccessMessage] = useState('');
+    const [isDepositSuccessful, setIsDepositSuccessful] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         // Fake bank check (for demonstration purposes)
         if (depositMethod === 'bank' && !fakeBankCheck(bankAccountNumber, sortCode)) {
-            alert('Invalid bank details');
+            setError('Invalid bank details');
             return;
         }
 
@@ -29,19 +33,38 @@ export default function DepositForm(props) {
         };
 
         try {
-            const url = apiUrl+'/api/deposit';
+            const url = apiUrl + '/api/deposit';
             console.log('Deposit URL:', url);
             const response = await axios.post(url, depositDetails);
             console.log('Deposit successful:', response.data);
+
+            setIsDepositSuccessful(true);
+            setSuccessMessage('Deposit successful');
+
             // Reset the form
             setAmount('');
             setPaypalAccount('');
             setBankAccountHolder('');
             setBankAccountNumber('');
             setSortCode('');
+            setError(null); // Clear any previous errors
         } catch (error) {
             console.error('Error during deposit:', error);
-            alert('Deposit failed');
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error('Error data:', error.response.data);
+                console.error('Error status:', error.response.status);
+                console.error('Error headers:', error.response.headers);
+                setError(error.response.data.message); // Set the error message from the response
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('Error request:', error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error message:', error.message);
+            }
+            console.error('Error config:', error.config);
         }
     };
 
@@ -49,6 +72,18 @@ export default function DepositForm(props) {
         return accountNumber.length === 8 && sortCode.length === 6;
     };
 
+    // Render success message if the deposit was successful
+    if (isDepositSuccessful) {
+        return (
+            <div className="max-w-sm mx-auto my-8">
+                <div className="bg-green-200 text-green-700 shadow-md rounded px-8 py-6 mb-4">
+                    <p className="font-bold text-lg">{successMessage}</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Render the deposit form if the deposit was not successful
     return (
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto my-8">
             {/* Amount input */}
@@ -175,6 +210,9 @@ export default function DepositForm(props) {
             >
                 Deposit
             </button>
+
+            {/* Error message */}
+            {error && <p className="text-red-600 text-center">{error}</p>}
         </form>
     );
 }

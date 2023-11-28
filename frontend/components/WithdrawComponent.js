@@ -1,7 +1,8 @@
 "use client";
 import axios from 'axios';
 import React, { useState } from 'react';
-const apiUrl = process.env.NEXT_PUBLIC_API_URL
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export default function WithdrawForm(props) {
     const email = props.userEmail;
     const [amount, setAmount] = useState('');
@@ -10,9 +11,16 @@ export default function WithdrawForm(props) {
     const [bankAccountHolder, setBankAccountHolder] = useState('');
     const [bankAccountNumber, setBankAccountNumber] = useState('');
     const [sortCode, setSortCode] = useState('');
+    const [error, setError] = useState(null); // State to store error message
+    const [successMessage, setSuccessMessage] = useState('');
+    const [isWithdrawalSuccessful, setIsWithdrawalSuccessful] = useState(false);
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+        
+        if(amount <= 0){
+            setError('Amount must be greater than 0');
+
         const withdrawalDetails = {
             userEmail: email, // Replace with the actual user email
             amount,
@@ -20,13 +28,17 @@ export default function WithdrawForm(props) {
             paypalAccount: withdrawMethod === 'paypal' ? paypalAccount : undefined,
             bankDetails: withdrawMethod === 'bank' ? { bankAccountHolder, bankAccountNumber, sortCode } : undefined,
         };
-    
+
         console.log('Withdrawing:', withdrawalDetails);
-    
+
         try {
-            const url = apiUrl+'/api/withdraw';
+            const url = apiUrl + '/api/withdraw';
             const response = await axios.post(url, withdrawalDetails);
             console.log('Withdrawal successful:', response.data);
+
+            setIsWithdrawalSuccessful(true);
+            setSuccessMessage('Withdrawal successful');
+
             // Reset the form
             setAmount('');
             setWithdrawMethod(''); // Assuming you have a state for this
@@ -34,12 +46,29 @@ export default function WithdrawForm(props) {
             setBankAccountHolder('');
             setBankAccountNumber('');
             setSortCode('');
+            setError(null); // Clear any previous errors
         } catch (error) {
             console.error('Error during withdrawal:', error);
-            alert('Withdrawal failed' + error.message);
+            if (error.response) {
+                setError(error.response.data.message); // Set the error message from the response
+            } else {
+                setError('Withdrawal failed');
+            }
         }
     };
 
+    // Render success message if the withdrawal was successful
+    if (isWithdrawalSuccessful) {
+        return (
+            <div className="max-w-sm mx-auto my-8">
+                <div className="bg-green-200 text-green-700 shadow-md rounded px-8 py-6 mb-4">
+                    <p className="font-bold text-lg">{successMessage}</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Render the withdrawal form if the withdrawal was not successful
     return (
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto my-8">
             <div className="mb-6">
@@ -161,7 +190,8 @@ export default function WithdrawForm(props) {
             >
                 Withdraw
             </button>
+
+            {error && <p className="text-red-600 text-center">{error}</p>}
         </form>
     );
 }
-
