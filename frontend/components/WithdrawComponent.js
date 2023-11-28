@@ -17,9 +17,6 @@ export default function WithdrawForm(props) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
-        if(amount <= 0){
-            setError('Amount must be greater than 0');
 
         const withdrawalDetails = {
             userEmail: email, // Replace with the actual user email
@@ -194,4 +191,4 @@ export default function WithdrawForm(props) {
             {error && <p className="text-red-600 text-center">{error}</p>}
         </form>
     );
-}}
+}
