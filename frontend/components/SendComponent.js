@@ -3,10 +3,12 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const SendMoneyForm = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [amount, setAmount] = useState('');
     const [recipient, setRecipient] = useState('');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [isTransactionSuccessful, setIsTransactionSuccessful] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,10 +28,23 @@ const SendMoneyForm = () => {
             });
 
             console.log('Transaction successful:', response.data);
+            setIsTransactionSuccessful(true);
+            setSuccessMessage('Transaction successful');
         } catch (err) {
             setError(err.response?.data?.message || 'An error occurred while sending money.');
         }
     };
+
+    // Render success message and hide the form if the transaction was successful
+    if (isTransactionSuccessful) {
+        return (
+            <div className="max-w-sm mx-auto mt-10">
+                <div className="bg-green-200 text-green-700 shadow-md rounded px-8 py-6 mb-4">
+                    <p className="font-bold text-lg">{successMessage}</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-sm mx-auto mt-10">
