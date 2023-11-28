@@ -194,4 +194,4 @@ export default function WithdrawForm(props) {
             {error && <p className="text-red-600 text-center">{error}</p>}
         </form>
     );
-}
+}}
