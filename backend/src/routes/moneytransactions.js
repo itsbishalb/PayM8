@@ -71,6 +71,7 @@ router.post('/', async (req, res) => {
         });
 
         await senderBank.save(); // Update sender's balance
+        await receiverBank.save(); // Update sender's balance
         await receiverTransaction.save(); // Save receiver's transaction
 
         await session.commitTransaction();
